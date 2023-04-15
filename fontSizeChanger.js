@@ -3,8 +3,8 @@
 // @namespace     https://chat.openai.com/
 // @version       1.2
 // @description   The "Font Size Changer with Side Pane Width Draggable" script is a Tampermonkey user script that modifies the font size and other styles of web elements with the class ".text-base". It sets the font size, line height, font family, and font weight to predefined values for improved readability. Additionally, the script adjusts the max width of elements with the class ".xl:max-w-3xl" to a specific value. Furthermore, it deactivates the "font-size" property for elements with the class ".prose" by setting it to "inherit". These changes are made using the GM_addStyle function, making it easy to customize the font styles according to your preference. The script also allows you to change the width of elements with the class ".md:w-[260px]" (side pane) by dragging it with the cursor.
-// @match         https://chat.openai.com/*
-// @author        Amitai Salmon
+// @match         *://*/*
+// @author       Amitai Salmon
 // @grant         GM_addStyle
 // ==/UserScript==
 
@@ -45,6 +45,9 @@
             line-height: inherit !important;
             font-family: inherit !important;
             font-weight: inherit !important;
+        }`);
+        GM_addStyle(`.md\\:pb-6 {
+            padding-bottom: 2.5rem !important;
         }`);
     }
 
@@ -138,6 +141,8 @@
         handleSidePaneWidthDrag(evt);
         //}
     });
+
+    // Fully loaded!
 
     // Call the initial function to apply font size and side pane width changes
     changeFontSizeAndSidePaneWidth();

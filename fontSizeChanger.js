@@ -94,6 +94,7 @@
     increaseFontSizeButton.style.right = "100px";
     increaseFontSizeButton.style.zIndex = "9999";
     increaseFontSizeButton.addEventListener("click", increaseFontSize);
+    increaseFontSizeButton.addEventListener("click", increaseLineHeight);
 
     const decreaseFontSizeButton = document.createElement("button");
     decreaseFontSizeButton.textContent = "-";
@@ -102,31 +103,20 @@
     decreaseFontSizeButton.style.right = "60px";
     decreaseFontSizeButton.style.zIndex = "9999";
     decreaseFontSizeButton.addEventListener("click", decreaseFontSize);
-
-    const increaseLineHeightButton = document.createElement("button");
-    increaseLineHeightButton.textContent = "+";
-    increaseLineHeightButton.style.position = "fixed";
-    increaseLineHeightButton.style.bottom = "20px";
-    increaseLineHeightButton.style.right = "180px";
-    increaseLineHeightButton.style.zIndex = "9999";
-    increaseLineHeightButton.addEventListener("click", increaseLineHeight);
-
-    const decreaseLineHeightButton = document.createElement("button");
-    decreaseLineHeightButton.textContent = "-";
-    decreaseLineHeightButton.style.position = "fixed";
-    decreaseLineHeightButton.style.bottom = "20px";
-    decreaseLineHeightButton.style.right = "140px";
-    decreaseLineHeightButton.style.zIndex = "9999";
-    decreaseLineHeightButton.addEventListener("click", decreaseLineHeight);
+    decreaseFontSizeButton.addEventListener("click", decreaseLineHeight);
 
     // Add buttons to the DOM
     document.body.appendChild(increaseFontSizeButton);
     document.body.appendChild(decreaseFontSizeButton);
-    document.body.appendChild(increaseLineHeightButton);
-    document.body.appendChild(decreaseLineHeightButton);
 
     // Add event listener for side pane width dragging
-    window.addEventListener("dblclick", handleSidePaneWidthDrag);
+    //window.addEventListener('dblclick', handleSidePaneWidthDrag);
+
+    window.addEventListener("click", function(evt) {
+        if (evt.detail === 3) {
+            handleSidePaneWidthDrag(evt);
+        }
+    });
 
     // Call the initial function to apply font size and side pane width changes
     changeFontSizeAndSidePaneWidth();

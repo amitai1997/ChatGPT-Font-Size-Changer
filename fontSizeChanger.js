@@ -6,6 +6,7 @@
 // @author        Amitai Salmon
 // @grant         GM_addStyle
 // @version       2.0.0
+// @require       https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
 
 (function() {
@@ -50,6 +51,8 @@
             padding-bottom: 2.5rem !important;
         }`);
     }
+
+    //$(`.md\\:w-\\[260px\\]`).resizable({ handles: "n, e, s, w" });
 
     // Function to handle side pane width dragging
     function handleSidePaneWidthDrag(event) {

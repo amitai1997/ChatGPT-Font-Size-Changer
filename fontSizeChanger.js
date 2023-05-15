@@ -2,7 +2,7 @@
 // @name          ChatGPT Font Size Changer with Side Pane Width Draggable
 // @namespace     https://chat.openai.com/
 // @description   The "Font Size Changer with Side Pane Width Draggable" script is a Tampermonkey user script that modifies the font size and other styles of web elements with the class ".text-base". It sets the font size, line height, font family, and font weight to predefined values for improved readability. Additionally, the script adjusts the max width of elements with the class ".xl:max-w-3xl" to a specific value. Furthermore, it deactivates the "font-size" property for elements with the class ".prose" by setting it to "inherit". These changes are made using the GM_addStyle function, making it easy to customize the font styles according to your preference. The script also allows you to change the width of elements with the class ".md:w-[260px]" (side pane) by dragging it with the cursor.
-// @match         https://chat.openai.com/*a
+// @match         https://chat.openai.com/*
 // @author        Amitai Salmon
 // @grant         GM_addStyle
 // @version       2.0.0
@@ -14,11 +14,12 @@
 
     // Define CSS values as variables
     let fontSize = 1.3;
+    let searchBoxfontSize = 1.25;
     let lineHeight = 2.2;
     const TEXT_BASE_FONT_FAMILY = "Calibri";
     const TEXT_BASE_FONT_WEIGHT = "100";
     const XL_MAX_WIDTH = "70rem";
-    const SIDE_MENU_MIN_WIDTH = 300; // minimum width of side pane in pixels
+    const SIDE_MENU_MIN_WIDTH = 350; // minimum width of side pane in pixels
     var editMenu = 0;
 
     // Function to change the font size and side pane width
@@ -32,8 +33,13 @@
         GM_addStyle(`.xl\\:max-w-3xl {
             max-width: ${XL_MAX_WIDTH} !important;
         }`);
-        GM_addStyle(`.md\\:w-\\[260px\\] {
-            width: var(--side-pane-width, ${SIDE_MENU_MIN_WIDTH}px) !important;
+        GM_addStyle(`.bg-gray-900 {
+            width: ${SIDE_MENU_MIN_WIDTH}px !important;
+            overflow: hidden;
+            transition: width 0.3s;
+        }`);
+        GM_addStyle(`.w-\\[260px\\] {
+            width: ${SIDE_MENU_MIN_WIDTH}px;
             overflow: hidden;
             transition: width 0.3s;
         }`);
@@ -50,16 +56,29 @@
         GM_addStyle(`.md\\:pb-6 {
             padding-bottom: 2.5rem !important;
         }`);
+        GM_addStyle(`.text-gray-100 {
+            font-size: ${searchBoxfontSize}rem !important;
+            font-family: ${TEXT_BASE_FONT_FAMILY} !important;
+            font-weight: ${TEXT_BASE_FONT_WEIGHT} !important;
+        }`);
     }
+
+
+
 
     // Function to handle side pane width dragging
     function handleSidePaneWidthDrag(event) {
         if (event.buttons !== 1) return; // exit if mouse button is not pressed
         if (editMenu !== 1) return;
         const newWidth = event.clientX;
-        const sidePane = document.querySelector(".md\\:w-\\[260px\\]");
-        if (sidePane) {
-            sidePane.style.setProperty("--side-pane-width", `${newWidth}px`);
+        const sidePane = document.querySelector(".bg-gray-900");
+        const innerSidePane = document.querySelector(`.w-\\[260px\\]`);
+        const sidePaneInnerText = document.evaluate('//*[@id="__next"]/div[2]/div[1]/div/div/div/nav/div[2]/div/div/span[1]/div[1]/ol/li/a', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+        if (sidePane && innerSidePane) {
+            innerSidePane.style.setProperty("width", `${newWidth}px`);
+            sidePane.style.setProperty("width", `${newWidth}px`, "important");
+            sidePaneInnerText.style.setProperty("width", `${newWidth}px`, "important");
         }
     }
 
@@ -124,8 +143,7 @@
     document.body.appendChild(decreaseFontSizeButton);
     document.body.appendChild(editMenuButtom);
 
-    // Add event listener for side pane width dragging
-    //window.addEventListener('dblclick', handleSidePaneWidthDrag);
+
 
     function myfunc() {
         if (editMenu == 0) {
@@ -138,12 +156,9 @@
     }
 
     window.addEventListener("mousemove", function(evt) {
-        //if (evt.detail === 3) {
         handleSidePaneWidthDrag(evt);
-        //}
     });
 
-    // Fully loaded!
 
     // Call the initial function to apply font size and side pane width changes
     changeFontSizeAndSidePaneWidth();
